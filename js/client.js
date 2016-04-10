@@ -4,6 +4,7 @@ var storyID;
 //the Play button is pressed.
 $( "#playButton" ).click(function() {
     $( "#playButton" ).hide();
+    $("#theJumbotron").hide()
     $.ajax({
         url: "http://localhost:8000/getStory",
         type: "GET",
@@ -14,6 +15,8 @@ $( "#playButton" ).click(function() {
                 str,
                 usageCount;
             storyID = result.id;
+
+            $("#input_section").append("<h2>Please fill in the blanks below!");
 
             splitText.forEach(function(entry) {
                 if (entry[0] === "[") {
@@ -28,11 +31,11 @@ $( "#playButton" ).click(function() {
                     });
                     strArray.push(str);
 
-                    $("#input_section").append("<div id='" + str + usageCount + "'>" + str + ": <input type=text></div><br>");
+                    $("#input_section").append("<div id='" + str + usageCount + "'>" + "<label>" + str + "</label>" + ": <input type=text class=form-control required></div><br>");
                 }
 
             });
-            $("#input_section").append("<button type=submit id='submitButton'>Submit</button>");
+            $("#input_section").append("<button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
         }
     });
 });

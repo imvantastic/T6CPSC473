@@ -3,18 +3,48 @@
 
 <head>
 	<link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="css/jumbotron-narrow.css" rel="stylesheet" type="text/css">
     <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.js"></script>
 
 </head>
 <body>
-    <button type="submit" id="playButton">Play</button>
 
-    <form>
-        <div id="input_section">
+	<div class="container">
+		<div class="header clearfix">
+			<nav>
+				<ul class="nav nav-pills pull-right">
+					<li role="presentation" class="active"> <a href="#">Home</a></li>
+					<li role="presentation"><a href="#">How to play?</a></li>
+					<li role="presentation"><a href="#">About</a></li>
+					<li role="presentation"><a href="#">Contact</a></li> 
+			</nav>
+			<h3 class="text-muted">MadLibs</h3>
+		</div>
 
-        </div>
-    </form>
+		<div class="jumbotron" id="theJumbotron">
+			<h1>Lorem Ipmsum</h1>
+			<p class="lead"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+
+			<button type="submit" id="playButton" class="btn btn-lg btn-success" href="#" role="button">Play</button>
+
+		</div>
+
+	
+
+	    
+
+	    <form class ="form-inline">
+	        <div id="input_section" class="form-group">
+
+	        </div>
+	    </form>
+
+	    <footer class="footer">
+	    	<p>Team 6 CPSC 473 </p>
+	    </footer>
+
+	</div> <!-- container -->
     <script type="text/javascript" src="js/client.js" ></script>
 </body>
 </html>
