@@ -10,8 +10,8 @@ $( "#playButton" ).click(function() {
         dataType: "json",
         success: function(result){
             var splitText = result.story.split(/\[([^\]]+)]/),
+                strArray = [],
                 str,
-                strArray,
                 usageCount;
             storyID = result.id;
 

@@ -25,10 +25,9 @@ MongoClient.connect(url, function(err, db) {
 
 //Inserts sample mad lib story
 var insertStory = function(db, callback) {
-    console.log("Inserting");
     var collection = db.collection('stories');
     collection.insertOne(
-        {story:"Say cheese the photographer said as the camera flashed! and I had gone to to get our photos taken today. The first photo we really wanted was a picture of us dressed as [[Animals]] pretending to be a [[Feeling]]. When we saw the proofs of it, I was a bit [[Things (plural)]] because it looked different than in my head. (I hadn't imagined so many [[A Professional (like 'Baker')]] behind us.)"},
+        {story:"Say cheese the photographer said as the camera flashed! and I had gone to to get our photos taken today. The first photo we really wanted was a picture of us dressed as [[Animals]] pretending to be a [[Feeling]]. When we saw the proofs of it, I was a bit [[Things (Plural)]] because it looked different than in my head. (I hadn't imagined so many [[A Professional (like 'Baker')]] behind us.)"},
         function(err, result) {
             console.log("Mongo Insertion Error:" + err);
             callback(result);
@@ -36,28 +35,29 @@ var insertStory = function(db, callback) {
 };
 
 //Find random mad lib story from the database to use
-var findRandomStory = function(db, callback) {
+//**Doesn't actually find a random story yet**
+var findStory = function(db, callback) {
 
     var collection = db.collection('stories');
 
     collection.find({}).toArray(function(err, doc) {
         console.log("Found the following record");
         console.dir(doc);
-        callback(docs);
+        callback(doc);
     });
 };
 
 //Find mad lib story selected by id
-var findStory = function(id, db, callback) {
+/*var findStoryByID = function(id, db, callback) {
 
     var collection = db.collection('stories');
 
     collection.find({_id: id}).toArray(function(err, doc) {
         console.log("Found the following record");
         console.dir(doc);
-        callback(docs);
+        callback(doc);
     });
-};
+};*/
 
 //Return story and stories id
 app.get("/getStory", function(req, res) {
