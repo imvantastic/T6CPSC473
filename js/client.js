@@ -10,14 +10,25 @@ $( "#playButton" ).click(function() {
         dataType: "json",
         success: function(result){
             var splitText = result.story.split(/\[([^\]]+)]/),
-                str;
+                str,
+                strArray,
+                usageCount;
             storyID = result.id;
-            console.log(splitText);
 
             splitText.forEach(function(entry) {
                 if (entry[0] === "[") {
+
+                    usageCount = 1;
                     str = entry.substring(1, entry.length);
-                    $("#input_section").append("<div id='" + str +"'>" + str + ": <input type=text></div><br>");
+
+                    strArray.forEach(function(entry) {
+                        if (entry === str) {
+                            usageCount = usageCount + 1;
+                        }
+                    });
+                    strArray.push(str);
+
+                    $("#input_section").append("<div id='" + str + usageCount + "'>" + str + ": <input type=text></div><br>");
                 }
 
             });
