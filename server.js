@@ -78,4 +78,13 @@ app.get("/getStory", function(req, res) {
 
 });
 
+/*
+app.put('/story/:id', function (req, res) {
+      console.log(req.body.Animals);
+      console.log(req.body.Feeling);
+      console.log(req.body.Things);
+      console.log(req.body.Professional);  
+});
+*/
+
 http.createServer(app).listen(8000);
