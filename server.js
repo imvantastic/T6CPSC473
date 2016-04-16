@@ -2,7 +2,7 @@ var express = require("express"),
     http = require("http"),
     app = express(),
     MongoClient = require('mongodb').MongoClient;
-
+//post need bodyparser
 var bodyParser = require("body-parser");
 
 app.use(express.static(__dirname));
@@ -23,8 +23,6 @@ MongoClient.connect(url, function(err, db) {
             });
         }
     });
-
-
 });
 
 //Inserts sample mad lib story
@@ -74,41 +72,49 @@ app.get("/getStory", function(req, res) {
             db.close();
         });
     });
-
-
 });
 
 
-//Return story and stories id
-app.post("/stories", function(req, res) { 
-    
-    console.log("post request, "+req.body.id  );
-   
+// get the input value and stories id
+app.post("/inputs", function(req, res) { 
     MongoClient.connect(url, function(err, db) {
-         console.log("post Error: " + err);
-         console.log(req.body);
-       
-/*
-            res.json({
-               
-                id: doc[0]._id
-            });
-*/
-        
+        console.log("post Error: " + err);
+        console.log("req.body", req.body);
+        console.log("req.body.id:  "+req.body.id  );
+        var inputsObj = req.body;
+        insertInputValue(db, inputsObj, function() { db.close(); }); 
+        res.end("OK");
     });
-   
-
 });//end post
 
- //end app.get
-
-/*
-app.put('/story/:id', function (req, res) {
-      console.log(req.body.Animals);
-      console.log(req.body.Feeling);
-      console.log(req.body.Things);
-      console.log(req.body.Professional);  
+var insertInputValue = function(db, inputsObj, callback) {
+    var collection = db.collection('inputs');
+    collection.insertOne(
+        { input: inputsObj },
+        function(err, result) {
+            console.log("Insert input values Error:" + err);
+            console.log("Insert input values result:" + result);
+            callback(result);
+    });
+};
+ 
+//Return inputs and id
+app.get("/inputs", function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+         console.log("app.get req.body.id:  "+req.body.id  );
+          findInput(db, function(doc) {
+            res.json({
+                inputs: doc
+            });
+            db.close();
+        });
+    });
 });
-*/
+var findInput = function(db, callback) {
+    var collection = db.collection('inputs');
+    collection.find({}).toArray(function(err, doc) {
+        callback(doc);
+    });
+};
 
 http.createServer(app).listen(8000);

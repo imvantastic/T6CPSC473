@@ -36,7 +36,6 @@ console.log("str is:", str);
                     });
                      
                     strArray.push(str);
-console.log("strArray is ", strArray)
                     inputArray.push(""  +str.charAt(0)+ count + usageCount);
                    //change the id to first char 
                     $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
@@ -65,18 +64,17 @@ function submitFunction() {
    //var totalInputValue = [];
    for (var i = 0; i <totalInput; i++) {
       inputValue[i] = $('#'+ inputArray[i] + ' .form-control').val();
-      //totalInputValue.push(inputValue);
      // console.log("i="+i+", "+inputArray[i]);
      // console.log("i="+i+", "+inputValue[i]);
    }    
 console.log("inputValue are:", inputValue);
 
  //post input value 
-  var storyUrl = "http://localhost:8000/stories";
-   
+  var storyUrl = "http://localhost:8000/inputs";
+
   var newInput = {
            "id": storyID,
-           "input": inputValue           
+           "inputs": inputValue           
   };
        
        $.ajax({
@@ -84,7 +82,7 @@ console.log("inputValue are:", inputValue);
             url: storyUrl,
             data: newInput,
             success: function(result) {
-     console.log("post, result="+result);            
+     console.log("post, result= ", result);            
             },
             dataType: 'json',
             async: false
