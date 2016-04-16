@@ -3,8 +3,12 @@ var express = require("express"),
     app = express(),
     MongoClient = require('mongodb').MongoClient;
 
+var bodyParser = require("body-parser");
 
 app.use(express.static(__dirname));
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 var url = 'mongodb://localhost:27017/myproject';
 
@@ -61,22 +65,42 @@ var findStory = function(db, callback) {
 
 //Return story and stories id
 app.get("/getStory", function(req, res) {
-
     MongoClient.connect(url, function(err, db) {
-
         findStory(db, function(doc) {
-
             res.json({
                 story: doc[0].story,
                 id: doc[0]._id
             });
-
             db.close();
         });
     });
 
 
 });
+
+
+//Return story and stories id
+app.post("/stories", function(req, res) { 
+    
+    console.log("post request, "+req.body.id  );
+   
+    MongoClient.connect(url, function(err, db) {
+         console.log("post Error: " + err);
+         console.log(req.body);
+       
+/*
+            res.json({
+               
+                id: doc[0]._id
+            });
+*/
+        
+    });
+   
+
+});//end post
+
+ //end app.get
 
 /*
 app.put('/story/:id', function (req, res) {
