@@ -74,6 +74,46 @@ app.get("/getStory", function(req, res) {
     });
 });
 
+//Create a new game if there's no existing game to join
+app.post("/createNewGame", function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+        var collection = db.collection('games');
+        
+        // Look for random story Id in the DB
+        // Doesn't do that yet, hard-coded the story id for now
+        var newStoryId = "5709d7f045e3cbfb09d22164";
+
+        collection.insertOne(
+            {storyId: newStoryId,
+             isPlayer1Ready: true,
+             isPlayer2Ready: false,
+             player1Story: "",
+             player2Story: "" 
+         });
+        db.close();
+    });
+});
+
+//Find an open/ available game
+app.get("/joinGame", function(req, res) {
+    console.log("/joinGame");
+    MongoClient.connect(url, function(err, db) {
+        var collection = db.collection('games');
+        collection.findOne({"isPlayer2Ready":false}, function(err, doc) {
+            if (err) {
+                console.log("ERROR = " + err);
+            }
+            else if (doc) {
+                console.log('Found: ' + doc);
+                res.json(doc);
+            } 
+            else {
+                console.log('no data yet!')
+                res.json(doc);
+            }
+        });
+    });
+});
 
 // get the input value and stories id
 app.post("/inputs", function(req, res) { 
@@ -110,11 +150,14 @@ app.get("/inputs", function(req, res) {
         });
     });
 });
+
 var findInput = function(db, callback) {
     var collection = db.collection('inputs');
     collection.find({}).toArray(function(err, doc) {
         callback(doc);
     });
 };
+
+
 
 http.createServer(app).listen(8000);

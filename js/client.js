@@ -5,7 +5,27 @@ var strArray = [];
 //Builds form based off of chosen story when
 //the Play button is pressed.
 $( "#playButton" ).click(function() {
-    $( "#playButton" ).hide();
+    
+    // find an available game to join
+    $.get("http://localhost:8000/joinGame", function(data, status){
+      console.log("Data:" + data + "\n Status: " + status);
+      alert("Data:" + data + "\n Status: " + status);
+      if(data !== null) { // if exist, join the game
+        //join the game...
+        $('#joinAGameModal').modal('show');
+      }
+      else { // if not, create a new game
+        $.post("http://localhost:8000/createNewGame", function(data, status){
+          console.log("Data:" + data + "\n Status: " + status);
+          alert("Data:" + data + "\n Status: " + status);
+        });
+        $('#waitingModal').modal('show');
+      }// end if - else
+    });
+    
+
+    /*
+    $("#playButton").hide();
     $("#theJumbotron").hide()
     $.ajax({
         url: "http://localhost:8000/getStory",
@@ -19,16 +39,16 @@ $( "#playButton" ).click(function() {
             
             storyID = result.id;
             console.log("storyID is", storyID);
-console.log("result of splitText:", splitText);
+            console.log("result of splitText:", splitText);
 
             $("#input_section").append("<h2>Please fill in the blanks below!");
 
             splitText.forEach(function(entry) {
                 if (entry[0] === "[") {
-console.log("entry is", entry);
+                    console.log("entry is", entry);
                     usageCount = 1;
                     str = entry.substring(1, entry.length);
-console.log("str is:", str);
+                    console.log("str is:", str);
                     strArray.forEach(function(entry) {
                         if (entry === str) {
                             usageCount = usageCount + 1;
@@ -37,7 +57,9 @@ console.log("str is:", str);
                      
                     strArray.push(str);
                     inputArray.push(""  +str.charAt(0)+ count + usageCount);
+                   */
                    //change the id to first char 
+                    /*
                     $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
                                                  "<label>" + str + "</label>" + 
                                                  ": <input type=text class=form-control required></div><br>");
@@ -45,11 +67,12 @@ console.log("str is:", str);
                 }
 
             });//end splitText.forEach
-console.log("strArray is", strArray);
+            console.log("strArray is", strArray);
             $("#input_section").append("<button type=submit onclick='submitFunction()' id='submitButton' class='btn btn-default'>Submit</button>");
            
         }//end success: function
     });//end ajax put
+    */
 });//end click play
 
 
@@ -77,16 +100,21 @@ console.log("inputValue are:", inputValue);
            "inputs": inputValue           
   };
        
-       $.ajax({
-            type: 'POST',
-            url: storyUrl,
-            data: newInput,
-            success: function(result) {
-     console.log("post, result= ", result);            
-            },
-            dataType: 'json',
-            async: false
-        }); // end post
+ $.ajax({
+      type: 'POST',
+      url: storyUrl,
+      data: newInput,
+      success: function(result) {
+        console.log("post, result= ", result);            
+      },
+      dataType: 'json',
+      async: false
+  }); // end post
+
+
+
+
+
 }// end submitFunction
 
  
