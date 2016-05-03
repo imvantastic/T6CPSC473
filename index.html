@@ -23,8 +23,8 @@
 		</div>
 
 		<div class="jumbotron" id="theJumbotron">
-			<h1>Lorem Ipmsum</h1>
-			<p class="lead"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+			<h1>Mad Libs</h1>
+			<p class="lead"> Come play a fun game of fill in the blank! </p>
 
 			<button type="submit" id="playButton" class="btn btn-lg btn-success" href="#" role="button">Play</button>
 
@@ -54,7 +54,7 @@
 					<h5>Waiting for another player to join the game... </h5>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" id="formbutton">Close</button>
 				</div>
 			</div>
 		</div>
@@ -71,12 +71,19 @@
 					<h5>Joining a game... </h5>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" id="formbutton">Close</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
+    <!--add JS files-->
+    <script src="http://localhost:8000/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="js/client.js" ></script>
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <script type="text/javascript" src="js/views.js" ></script>
+    <!--<script>
+    var socket = io();
+    </script>-->
 </body>
 </html>

@@ -1,20 +1,39 @@
 var express = require("express"),
     http = require("http"),
     app = express(),
-    MongoClient = require('mongodb').MongoClient;
+    MongoClient = require('mongodb').MongoClient,
+    server = http.createServer(app),
+    io = require("socket.io").listen(server);
+
 //post need bodyparser
 var bodyParser = require("body-parser");
 
+//static files
 app.use(express.static(__dirname));
 
+//body parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+
+
+//filesystem
+var fs = require('fs');
+
+//mongodb
 var url = 'mongodb://localhost:27017/myproject';
+
+server.listen(8000);
+console.log("listening on port 8000");
+
+
+
 
 //Checks to see if db is already populated
 //and populates the db if it is not.
 MongoClient.connect(url, function(err, db) {
+    console.log("in monogo connect");
     console.log("Mongo Connection Error: " + err);
     findStory(db, function(doc) {
         if (doc.length === 0){
@@ -24,6 +43,18 @@ MongoClient.connect(url, function(err, db) {
         }
     });
 });
+console.log("outside mongoconnect");
+//gets stories from json file
+/*var storycollection [];
+var jsonStory = "stories.json";
+    fs.readFile(jsonStory, function(err, data) {
+        if(err) {
+            console.log(err);
+        } else {
+            var jsondata = JSON.parse(data);
+            storycollection = jsondata.story;
+        }
+    })*/
 
 //Inserts sample mad lib story
 var insertStory = function(db, callback) {
@@ -60,6 +91,80 @@ var findStory = function(db, callback) {
         callback(doc);
     });
 };*/
+
+//
+//sockets start//
+//
+var gameDef = require('./js/game.js');
+var gameArray = [];
+var playerDef = require('./js/player.js');
+var playersArray = [];
+
+// game variables
+var game;
+var story = "";
+var host = null;
+var hostname = "";
+
+// game not started
+var gamestatus = "not started";
+console.log("io: " + io);
+//when a player connects
+io.sockets.on('connection', function(socket){
+    console.log("user connected");
+    var player = new playerDef(socket.id);
+    playersArray.push(player);
+
+    console.log(player);
+
+    // Socket rooms: gameroom, host, formView
+    socket.join('gameroom');
+    socket.emit('reload lobby');
+
+    // remove player from game on disconnect
+    socket.on('disconnect', function () {
+        console.log("player disconnected");
+        //playerCollection.deletePlayer(player);
+        if (host === player) {
+            host = null;
+            hostname = "";
+            game = null;
+            gamestatus = "not started";
+            io.to('gameroom').emit('reset game');
+        }
+    });
+
+    //host game selected - set host and wait for other players
+    socket.on('hostGame', function() {
+        console.log("hosting game");
+        socket.join('host'); // Assign this socket to host
+        socket.leave('gameroom');
+        host = player;
+        //prepare game
+        socket.emit('setupgame');
+        //create game
+        game = new gameDef(host.getId());
+        gamestatus = "initializing";
+        
+        //send msg to other players
+        io.to('gameroom').emit('waitingforhost');
+        //var hostinroom = socket.clients('host');
+        //var playersinroom = socket.clients('gameroom');
+        //console.log(hostinroom);
+        //console.log(playersinroom);
+        
+    })
+
+    //start game
+    socket.on('startgame', function(){
+        console.log("in socket on of start game");
+        io.to('host').emit('showform1');
+        io.to('gameroom').emit('showform2');
+        //socket.emit('showform');
+    })
+
+});
+//sockets end
 
 //Return story and stories id
 app.get("/getStory", function(req, res) {
@@ -115,7 +220,10 @@ app.get("/joinGame", function(req, res) {
     });
 });
 
-// get the input value and stories id
+
+
+
+// get the input value and stories id and put it in the DB
 app.post("/inputs", function(req, res) { 
     MongoClient.connect(url, function(err, db) {
         console.log("post Error: " + err);
@@ -141,7 +249,7 @@ var insertInputValue = function(db, inputsObj, callback) {
 //Return inputs and id
 app.get("/inputs", function(req, res) {
     MongoClient.connect(url, function(err, db) {
-         console.log("app.get req.body.id:  "+req.body.id  );
+         console.log("app.get req.body.id:  "+req.body.id);
           findInput(db, function(doc) {
             res.json({
                 inputs: doc
@@ -160,4 +268,4 @@ var findInput = function(db, callback) {
 
 
 
-http.createServer(app).listen(8000);
+//http.createServer(app).listen(8000);

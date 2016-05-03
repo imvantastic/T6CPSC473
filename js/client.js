@@ -1,3 +1,139 @@
+var socket = io.connect('http://localhost:8000');
+
+//load lobby
+socket.on('reload lobby', function(data) {
+  $("div#theJumbotron").empty();
+  $("#input_section").empty();
+  $("div#theJumbotron").append(homescreen);
+})
+
+//host game
+function hostGame(){
+  socket.emit('hostGame');
+}
+
+//setupgame
+socket.on('setupgame', function(){
+  $("div#theJumbotron").empty();
+  $("div#theJumbotron").append(setupscreen);
+
+})
+
+//tell other players to wait
+socket.on('waitingforhost', function() {
+  $("div#theJumbotron").empty();
+  $("div#theJumbotron").append(waitingscreen);
+
+})
+
+//send socket message to start game
+function startTheGame(){
+  console.log("in start game fn");
+  socket.emit('startgame');
+}
+
+//show the form host
+socket.on('showform1', function(){
+   $("div#theJumbotron").empty();
+    $.ajax({
+        url: "http://localhost:8000/getStory",
+        type: "GET",
+        dataType: "json",
+        success: function(result){
+            var splitText = result.story.split(/\[([^\]]+)]/),
+                
+                str,
+                usageCount;
+            
+            storyID = result.id;
+            console.log("storyID is", storyID);
+            console.log("result of splitText:", splitText);
+
+            $("#input_section").append("<h2>Please fill in the blanks below!");
+
+            splitText.forEach(function(entry) {
+                if (entry[0] === "[") {
+                    console.log("entry is", entry);
+                    usageCount = 1;
+                    str = entry.substring(1, entry.length);
+                    console.log("str is:", str);
+                    strArray.forEach(function(entry) {
+                        if (entry === str) {
+                            usageCount = usageCount + 1;
+                        }
+                    });
+                     
+                    strArray.push(str);
+                    inputArray.push(""  +str.charAt(0)+ count + usageCount);
+                   
+                   //change the id to first char 
+                    
+                    $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
+                                                 "<label>" + str + "</label>" + 
+                                                 ": <input type=text class=form-control required></div><br>");
+                    count++;
+                }
+
+            });//end splitText.forEach
+            console.log("strArray is", strArray);
+            $("#input_section").append("<button type=submit onclick='submitFunction()' id='submitButton' class='btn btn-default'>Submit</button>");
+           
+        }//end success: function
+    });//end ajax put
+    
+}) //end of show host form socket
+
+
+//show the form to player 2
+socket.on('showform2', function(){
+   $("div#theJumbotron").empty();
+    $.ajax({
+        url: "http://localhost:8000/getStory",
+        type: "GET",
+        dataType: "json",
+        success: function(result){
+            var splitText = result.story.split(/\[([^\]]+)]/),
+                
+                str,
+                usageCount;
+            
+            storyID = result.id;
+            console.log("storyID is", storyID);
+            console.log("result of splitText:", splitText);
+
+            $("#input_section").append("<h2>Please fill in the blanks below!");
+
+            splitText.forEach(function(entry) {
+                if (entry[0] === "[") {
+                    console.log("entry is", entry);
+                    usageCount = 1;
+                    str = entry.substring(1, entry.length);
+                    console.log("str is:", str);
+                    strArray.forEach(function(entry) {
+                        if (entry === str) {
+                            usageCount = usageCount + 1;
+                        }
+                    });
+                     
+                    strArray.push(str);
+                    inputArray.push(""  +str.charAt(0)+ count + usageCount);
+                   
+                   //change the id to first char 
+                    
+                    $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
+                                                 "<label>" + str + "</label>" + 
+                                                 ": <input type=text class=form-control required></div><br>");
+                    count++;
+                }
+
+            });//end splitText.forEach
+            console.log("strArray is", strArray);
+            $("#input_section").append("<button type=submit onclick='submitFunction()' id='submitButton' class='btn btn-default'>Submit</button>");
+           
+        }//end success: function
+    });//end ajax put
+    
+}) //end of show player 2 form socket
 var storyID;
 var inputArray = [];
 var count = 0;
@@ -26,7 +162,7 @@ $( "#playButton" ).click(function() {
 
     /*
     $("#playButton").hide();
-    $("#theJumbotron").hide()
+    $("#theJumbotron").hide();
     $.ajax({
         url: "http://localhost:8000/getStory",
         type: "GET",

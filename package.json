@@ -1,0 +1,11 @@
+{
+    "name": "madlibs",
+    "description": "word game",
+    "version": "0.0.1",
+    "dependencies": {
+	"mongoose": "3.6.x",
+	"socket.io": "*",
+	"express": "*",
+	"ejs": "*"
+    }
+}
