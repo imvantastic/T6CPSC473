@@ -15,6 +15,7 @@ function hostGame(){
 //setupgame
 socket.on('setupgame', function(){
   $("div#theJumbotron").empty();
+  $("#input_section").empty();
   $("div#theJumbotron").append(setupscreen);
 
 })
@@ -22,6 +23,7 @@ socket.on('setupgame', function(){
 //tell other players to wait
 socket.on('waitingforhost', function() {
   $("div#theJumbotron").empty();
+  $("#input_section").empty();
   $("div#theJumbotron").append(waitingscreen);
 
 })
@@ -35,6 +37,7 @@ function startTheGame(){
 //show the form host
 socket.on('showform1', function(){
    $("div#theJumbotron").empty();
+   $("#input_section").empty();
     $.ajax({
         url: "http://localhost:8000/getStory",
         type: "GET",
@@ -87,6 +90,7 @@ socket.on('showform1', function(){
 //show the form to player 2
 socket.on('showform2', function(){
    $("div#theJumbotron").empty();
+   $("#input_section").empty();
     $.ajax({
         url: "http://localhost:8000/getStory",
         type: "GET",
