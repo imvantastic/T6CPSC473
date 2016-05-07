@@ -2,6 +2,7 @@ var express = require("express"),
     http = require("http"),
     app = express(),
     MongoClient = require('mongodb').MongoClient,
+    mongo = require('mongodb'),
     server = http.createServer(app),
     io = require("socket.io").listen(server);
 
@@ -81,16 +82,19 @@ var findStory = function(db, callback) {
 };
 
 //Find mad lib story selected by id
-/*var findStoryByID = function(id, db, callback) {
+var findStoryByID = function(id, db, callback) {
 
     var collection = db.collection('stories');
 
-    collection.find({_id: id}).toArray(function(err, doc) {
+    //convert string to mongodb object
+    var o_id = new mongo.ObjectID(id); 
+
+    collection.findOne({'_id': o_id}, function(err, doc) {
         console.log("Found the following record");
         console.dir(doc);
         callback(doc);
     });
-};*/
+};
 
 //
 //sockets start//
@@ -173,6 +177,21 @@ app.get("/getStory", function(req, res) {
             res.json({
                 story: doc[0].story,
                 id: doc[0]._id
+            });
+            db.close();
+        });
+    });
+});
+
+//Return a story by id
+app.get("/getStoryById", function(req, res) {
+    console.log("the story id is = " + req.query.storyID);
+    console.log('getstory by id - DeBUG');
+    MongoClient.connect(url, function(err, db) {
+        findStoryByID(req.query.storyID, db, function(doc) {
+            res.json({
+                story: doc.story,
+                id: doc._id
             });
             db.close();
         });
