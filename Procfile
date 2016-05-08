@@ -1,5 +1,4 @@
-todo: cd ../../
-db: ./mongodb/bin/mongod --dbpath=$HOME/mongodb/data
-mongo: mongo
-todo2: cd Project2_v1/T6CPSC473
-web: node server.js
+# Procfile - Launches Application
+# redisDB: /home/vagrant/redis/src/redis-server
+mongoDB: /home/vagrant/mongodb/bin/mongod --dbpath=/home/vagrant/mongodb/data
+MadLibs: nodemon --debug server.js

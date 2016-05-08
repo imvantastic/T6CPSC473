@@ -1,11 +1,12 @@
 {
     "name": "madlibs",
-    "description": "word game",
+    "description": "create a story game",
     "version": "0.0.1",
     "dependencies": {
 	"mongoose": "3.6.x",
 	"socket.io": "*",
 	"express": "*",
-	"ejs": "*"
+	"ejs": "*",
+	"nodemon": "*"
     }
 }
