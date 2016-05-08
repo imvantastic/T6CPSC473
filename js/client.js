@@ -71,16 +71,28 @@ socket.on('showform1', function(){
                    
                    //change the id to first char 
                     
+                   //replacing space(s) with underscore
+                   var str2 = str.split(' ').join('_');
+                   str2 = str2.split('(').join(''); //omit '('
+                   str2 = str2.split(')').join(''); // omit ')'
+                   str2 = str2.split('\'').join(''); // omit single quote
+
                     $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
                                                  "<label>" + str + "</label>" + 
-                                                 ": <input type=text class=form-control required></div><br>");
+                                                 ": <input type=text name="+ str2 +" class=form-control required></div><br>");
                     count++;
                 }
 
             });//end splitText.forEach
             console.log("strArray is", strArray);
-            $("#input_section").append("<button type=submit onclick='submitFunction()' id='submitButton' class='btn btn-default'>Submit</button>");
-           
+            $("#input_section").append("<button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
+            
+            //onclick() function for submitButton
+            var submitButton = document.getElementById("submitButton");
+            submitButton.addEventListener('click', function(){
+              buildStoryFunction(storyID);
+            });
+
         }//end success: function
     });//end ajax put
     
@@ -124,16 +136,28 @@ socket.on('showform2', function(){
                    
                    //change the id to first char 
                     
+                    //replacing space(s) with underscore
+                   var str2 = str.split(' ([])').join('_');
+                   str2 = str2.split('(').join(''); //omit '('
+                   str2 = str2.split(')').join(''); // omit ')'
+                   str2 = str2.split('\'').join(''); // omit single quote
+                    
                     $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
                                                  "<label>" + str + "</label>" + 
-                                                 ": <input type=text class=form-control required></div><br>");
+                                                 ": <input type=text name="+ str2 +" class=form-control required></div><br>");
                     count++;
                 }
 
             });//end splitText.forEach
             console.log("strArray is", strArray);
-            $("#input_section").append("<button type=submit onclick='submitFunction()' id='submitButton' class='btn btn-default'>Submit</button>");
-           
+            $("#input_section").append("<button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
+            
+            //onclick() function for submitButton
+            var submitButton = document.getElementById("submitButton");
+            submitButton.addEventListener('click', function(){
+              buildStoryFunction(storyID);
+            });
+
         }//end success: function
     });//end ajax put
     
@@ -250,11 +274,48 @@ console.log("inputValue are:", inputValue);
       dataType: 'json',
       async: false
   }); // end post
-
-
-
-
-
 }// end submitFunction
 
  
+function buildStoryFunction($storyID) {
+  //console.log(storyID);
+  //alert('debug');
+  alert($storyID);
+  var index = 0;
+  var finishedStory;
+
+  $.ajax({url: "http://localhost:8000/getStoryById",
+          data: {storyID : $storyID},
+          dataType: "json",
+          type: "GET",
+          success: function(result) {
+            console.log(result);
+            var splitText = result.story.split(/\[([^\]]+)]/);
+                
+            storyID = result.id;
+            console.log("storyID is", storyID);
+            console.log("result of splitText:", splitText);
+
+            splitText.forEach(function(entry) {
+                if (entry[0] === "[") {
+                    str = entry.substring(1, entry.length);
+                    
+                   //replacing space(s) with underscore
+                   var str2 = str.split(' ').join('_');
+                   str2 = str2.split('(').join(''); //omit '(''
+                   str2 = str2.split(')').join(''); //omit ')'
+                   str2 = str2.split('\'').join(''); //omit single quote
+
+                    var input1 = $('input[name='+str2+']').val();
+
+                    splitText[index] = input1;
+                }
+                index++;
+            });//end splitText.forEach
+          //console.log(splitText);
+          finishedStory = splitText.toString();
+          alert(finishedStory);
+          }
+        });
+ 
+}
