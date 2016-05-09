@@ -106,14 +106,24 @@ var playersArray = [];
 
 // game variables
 var game;
-var story = "";
+var stories = [];
 var host = null;
 var hostname = "";
+var storyArray = {
+    length: 0,
+
+    addElem: function addElem (elem) {
+        // obj.length is automatically incremented every time an element is added.
+        [].push.call(this, elem);
+    }
+};
+
 
 // game not started
 var gamestatus = "not started";
 console.log("io: " + io);
-//when a player connects
+
+//when a player connects; socket starts here
 io.sockets.on('connection', function(socket){
     console.log("user connected");
     var player = new playerDef(socket.id);
@@ -123,11 +133,15 @@ io.sockets.on('connection', function(socket){
 
     // Socket rooms: gameroom, host, formView
     socket.join('gameroom');
+    //emits command to load host a game button/lobby
     socket.emit('reload lobby');
 
     // remove player from game on disconnect
     socket.on('disconnect', function () {
         console.log("player disconnected");
+        playersArray.length = 0;
+        stories.length = 0;
+        io.to('gameroom').emit('reset game');
         //playerCollection.deletePlayer(player);
         if (host === player) {
             host = null;
@@ -167,8 +181,31 @@ io.sockets.on('connection', function(socket){
         //socket.emit('showform');
     })
 
+    //grab and hold story
+    socket.on('waitforothers', function(data){
+        console.log("in waitforothers");
+        //add story to array
+        var tempstory=data.story;
+        storyArray.addElem({story: tempstory});
+        stories.push(tempstory);
+        //if all stories are submitted, show them
+        if(playersArray.length == stories.length){
+            //show stories
+            console.log("in show stories");
+            //socket.emit('showstory', {storyArray: storyArray});
+            socket.emit('showstory');
+        }
+        else{
+            console.log("in nothing of waitforothers");
+            console.log("#players: " + playersArray.length + " story length: " + stories.length);
+            console.log(playersArray.length===stories.length);
+            //do nothing
+            //socket.emit('waitstoryscreen');
+        }
+    })
+
 });
-//sockets end
+//SOCKETS END
 
 //Return story and stories id
 app.get("/getStory", function(req, res) {
@@ -198,6 +235,7 @@ app.get("/getStoryById", function(req, res) {
     });
 });
 
+//can comment this out
 //Create a new game if there's no existing game to join
 app.post("/createNewGame", function(req, res) {
     MongoClient.connect(url, function(err, db) {
@@ -218,6 +256,7 @@ app.post("/createNewGame", function(req, res) {
     });
 });
 
+//can comment this out
 //Find an open/ available game
 app.get("/joinGame", function(req, res) {
     console.log("/joinGame");
