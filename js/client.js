@@ -1,6 +1,16 @@
+var clientStoryArray = [];
+
 var socket = io.connect('http://localhost:8000');
 
+//reset game on disconnect
+socket.on('reset game', function(data) {
+  $("div#theJumbotron").empty();
+  $("#input_section").empty();
+  $("div#theJumbotron").append(resethomescreen);
+})
+
 //load lobby
+//creates the html to create the lobby
 socket.on('reload lobby', function(data) {
   $("div#theJumbotron").empty();
   $("#input_section").empty();
@@ -8,6 +18,7 @@ socket.on('reload lobby', function(data) {
 })
 
 //host game
+//when host game button is clicked
 function hostGame(){
   socket.emit('hostGame');
 }
@@ -90,7 +101,18 @@ socket.on('showform1', function(){
             //onclick() function for submitButton
             var submitButton = document.getElementById("submitButton");
             submitButton.addEventListener('click', function(){
-              buildStoryFunction(storyID);
+              //build story
+              var story = buildStoryFunction(storyID);
+              //add to story array
+              clientStoryArray.push(story);
+              console.log("clientstoryarray1: " + clientStoryArray.length);
+              //clear screen and have them wai
+              $("div#theJumbotron").empty();
+              $("#input_section").empty();
+              $("div#theJumbotron").append(storysubmitwaitingscreen);
+
+              //send the story and wait
+              socket.emit('waitforothers', {story: story});
             });
 
         }//end success: function
@@ -152,16 +174,52 @@ socket.on('showform2', function(){
             console.log("strArray is", strArray);
             $("#input_section").append("<button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
             
+            console.log("in show form 2");
             //onclick() function for submitButton
             var submitButton = document.getElementById("submitButton");
             submitButton.addEventListener('click', function(){
-              buildStoryFunction(storyID);
+              //buildStoryFunction(storyID);
+              //build story
+              var story2 = buildStoryFunction(storyID);
+              clientStoryArray.push(story2);
+              console.log("clientstoryarray2: " + clientStoryArray);
+              //clear screen and have them wait
+              $("div#theJumbotron").empty();
+              $("#input_section").empty();
+              $("div#theJumbotron").append(storysubmitwaitingscreen);
+
+              //send the story and wait
+              socket.emit('waitforothers', {story: story2});
             });
 
         }//end success: function
     });//end ajax put
     
 }) //end of show player 2 form socket
+
+//show story
+socket.on('showstory', function(){
+  console.log("in client side of show story. length: " + clientStoryArray.length);
+  //console.log(data.stories.length);
+  //console.log("showstorydataL: " + data.storyArray[0]);
+ // var storyHolder = JSON.parse(data);
+  //console.log("storyholder: " + storyHolder);
+  /*var storyArray = [];*/
+  var i;
+  for(i=0; i<clientStoryArray.length; i++){
+    
+    console.log("clientstoryArrayloop: " + clientStoryArray);
+  }
+
+  $("div#theJumbotron").empty();
+  $("#input_section").empty();
+  $("div#theJumbotron").append(showstoryheader);
+  $("div#theJumbotron").append("</br></br>Stories: </br>" + clientStoryArray);
+})
+//end of show story
+
+
+//vn: can comment this out
 var storyID;
 var inputArray = [];
 var count = 0;
@@ -242,6 +300,7 @@ $( "#playButton" ).click(function() {
 
 
 // ====================================  submit input ============================================
+//can comment out
 function submitFunction() {
     console.log("submit function");
 
@@ -276,7 +335,7 @@ console.log("inputValue are:", inputValue);
   }); // end post
 }// end submitFunction
 
- 
+ // ====================================  Build Story ============================================
 function buildStoryFunction($storyID) {
   //console.log(storyID);
   //alert('debug');
