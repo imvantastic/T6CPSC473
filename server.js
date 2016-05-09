@@ -186,12 +186,15 @@ io.sockets.on('connection', function(socket){
         console.log("in waitforothers");
         //add story to array
         var tempstory=data.story;
+        //attempt to make a json array to pass
         storyArray.addElem({story: tempstory});
+        //pushing to the regular stories array defined as []
         stories.push(tempstory);
         //if all stories are submitted, show them
         if(playersArray.length == stories.length){
             //show stories
             console.log("in show stories");
+            //adjust this to pass the json object
             //socket.emit('showstory', {storyArray: storyArray});
             socket.emit('showstory');
         }

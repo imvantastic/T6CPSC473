@@ -110,7 +110,7 @@ socket.on('showform1', function(){
 
                   //add to story array
 
-                  console.log("clientstoryarray1: " + clientStoryArray.length);
+                  console.log("clientstoryarrayhost: " + clientStoryArray.length);
                   //clear screen and have them wai
                   $("div#theJumbotron").empty();
                   $("#input_section").empty();
@@ -194,14 +194,14 @@ socket.on('showform2', function(){
                   clientStoryArray.push(story2);
                   //add to story array
 
-                  console.log("clientstoryarray1: " + clientStoryArray.length);
+                  console.log("clientstoryarray2: " + clientStoryArray.length);
                   //clear screen and have them wai
                   $("div#theJumbotron").empty();
                   $("#input_section").empty();
                   $("div#theJumbotron").append(storysubmitwaitingscreen);
 
                   //send the story and wait
-                  socket.emit('waitforothers', {story: story});
+                  socket.emit('waitforothers', {story: story2});
               });
 
             });
@@ -227,8 +227,12 @@ socket.on('showstory', function(){
 
   $("div#theJumbotron").empty();
   $("#input_section").empty();
-  $("div#theJumbotron").append(showstoryheader);
-  $("div#theJumbotron").append("</br></br>Stories: </br>" + clientStoryArray[0]);
+  //$("div#theJumbotron").append(showstoryheader);
+  $("div#theJumbotron").append("<div class=\"jumbotron\" id=\"theJumbotron\">" +
+      "<h1>Mad Libs</h1>" + 
+      "<p class=\"lead\"> Here it is!</p>"+
+      "</br> Laugh it up!" +
+        "</div>" + "Stories: </br>" + clientStoryArray[0]);
 })
 //end of show story
 
