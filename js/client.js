@@ -55,10 +55,10 @@ socket.on('showform1', function(){
         dataType: "json",
         success: function(result){
             var splitText = result.story.split(/\[([^\]]+)]/),
-                
+
                 str,
                 usageCount;
-            
+
             storyID = result.id;
             console.log("storyID is", storyID);
             console.log("result of splitText:", splitText);
@@ -76,20 +76,20 @@ socket.on('showform1', function(){
                             usageCount = usageCount + 1;
                         }
                     });
-                     
+
                     strArray.push(str);
                     inputArray.push(""  +str.charAt(0)+ count + usageCount);
-                   
-                   //change the id to first char 
-                    
+
+                   //change the id to first char
+
                    //replacing space(s) with underscore
                    var str2 = str.split(' ').join('_');
                    str2 = str2.split('(').join(''); //omit '('
                    str2 = str2.split(')').join(''); // omit ')'
                    str2 = str2.split('\'').join(''); // omit single quote
 
-                    $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
-                                                 "<label>" + str + "</label>" + 
+                    $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" +
+                                                 "<label>" + str + "</label>" +
                                                  ": <input type=text name="+ str2 +" class=form-control required></div><br>");
                     count++;
                 }
@@ -97,27 +97,35 @@ socket.on('showform1', function(){
             });//end splitText.forEach
             console.log("strArray is", strArray);
             $("#input_section").append("<button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
-            
+
             //onclick() function for submitButton
             var submitButton = document.getElementById("submitButton");
             submitButton.addEventListener('click', function(){
               //build story
-              var story = buildStoryFunction(storyID);
-              //add to story array
-              clientStoryArray.push(story);
-              console.log("clientstoryarray1: " + clientStoryArray.length);
-              //clear screen and have them wai
-              $("div#theJumbotron").empty();
-              $("#input_section").empty();
-              $("div#theJumbotron").append(storysubmitwaitingscreen);
+              var story;
+              buildStoryFunction(storyID, function (newstory) {
+                  story = newstory
+                  clientStoryArray.push(story);
+                  console.log(story);
 
-              //send the story and wait
-              socket.emit('waitforothers', {story: story});
-            });
+                  //add to story array
+
+                  console.log("clientstoryarray1: " + clientStoryArray.length);
+                  //clear screen and have them wai
+                  $("div#theJumbotron").empty();
+                  $("#input_section").empty();
+                  $("div#theJumbotron").append(storysubmitwaitingscreen);
+
+                  //send the story and wait
+                  socket.emit('waitforothers', {story: story});
+                });
+              });
+
+
 
         }//end success: function
     });//end ajax put
-    
+
 }) //end of show host form socket
 
 
@@ -131,10 +139,10 @@ socket.on('showform2', function(){
         dataType: "json",
         success: function(result){
             var splitText = result.story.split(/\[([^\]]+)]/),
-                
+
                 str,
                 usageCount;
-            
+
             storyID = result.id;
             console.log("storyID is", storyID);
             console.log("result of splitText:", splitText);
@@ -152,20 +160,20 @@ socket.on('showform2', function(){
                             usageCount = usageCount + 1;
                         }
                     });
-                     
+
                     strArray.push(str);
                     inputArray.push(""  +str.charAt(0)+ count + usageCount);
-                   
-                   //change the id to first char 
-                    
+
+                   //change the id to first char
+
                     //replacing space(s) with underscore
                    var str2 = str.split(' ([])').join('_');
                    str2 = str2.split('(').join(''); //omit '('
                    str2 = str2.split(')').join(''); // omit ')'
                    str2 = str2.split('\'').join(''); // omit single quote
-                    
-                    $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
-                                                 "<label>" + str + "</label>" + 
+
+                    $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" +
+                                                 "<label>" + str + "</label>" +
                                                  ": <input type=text name="+ str2 +" class=form-control required></div><br>");
                     count++;
                 }
@@ -173,28 +181,34 @@ socket.on('showform2', function(){
             });//end splitText.forEach
             console.log("strArray is", strArray);
             $("#input_section").append("<button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
-            
+
             console.log("in show form 2");
             //onclick() function for submitButton
             var submitButton = document.getElementById("submitButton");
             submitButton.addEventListener('click', function(){
               //buildStoryFunction(storyID);
               //build story
-              var story2 = buildStoryFunction(storyID);
-              clientStoryArray.push(story2);
-              console.log("clientstoryarray2: " + clientStoryArray);
-              //clear screen and have them wait
-              $("div#theJumbotron").empty();
-              $("#input_section").empty();
-              $("div#theJumbotron").append(storysubmitwaitingscreen);
+              var story2;
+              buildStoryFunction(storyID, function (newstory) {
+                  story2 = newstory;
+                  clientStoryArray.push(story2);
+                  //add to story array
 
-              //send the story and wait
-              socket.emit('waitforothers', {story: story2});
+                  console.log("clientstoryarray1: " + clientStoryArray.length);
+                  //clear screen and have them wai
+                  $("div#theJumbotron").empty();
+                  $("#input_section").empty();
+                  $("div#theJumbotron").append(storysubmitwaitingscreen);
+
+                  //send the story and wait
+                  socket.emit('waitforothers', {story: story});
+              });
+
             });
 
         }//end success: function
     });//end ajax put
-    
+
 }) //end of show player 2 form socket
 
 //show story
@@ -207,14 +221,14 @@ socket.on('showstory', function(){
   /*var storyArray = [];*/
   var i;
   for(i=0; i<clientStoryArray.length; i++){
-    
-    console.log("clientstoryArrayloop: " + clientStoryArray);
+
+    console.log("clientstoryArrayloop: " + clientStoryArray[i]);
   }
 
   $("div#theJumbotron").empty();
   $("#input_section").empty();
   $("div#theJumbotron").append(showstoryheader);
-  $("div#theJumbotron").append("</br></br>Stories: </br>" + clientStoryArray);
+  $("div#theJumbotron").append("</br></br>Stories: </br>" + clientStoryArray[0]);
 })
 //end of show story
 
@@ -227,7 +241,7 @@ var strArray = [];
 //Builds form based off of chosen story when
 //the Play button is pressed.
 $( "#playButton" ).click(function() {
-    
+
     // find an available game to join
     $.get("http://localhost:8000/joinGame", function(data, status){
       console.log("Data:" + data + "\n Status: " + status);
@@ -244,7 +258,7 @@ $( "#playButton" ).click(function() {
         $('#waitingModal').modal('show');
       }// end if - else
     });
-    
+
 
     /*
     $("#playButton").hide();
@@ -255,10 +269,10 @@ $( "#playButton" ).click(function() {
         dataType: "json",
         success: function(result){
             var splitText = result.story.split(/\[([^\]]+)]/),
-                
+
                 str,
                 usageCount;
-            
+
             storyID = result.id;
             console.log("storyID is", storyID);
             console.log("result of splitText:", splitText);
@@ -276,14 +290,14 @@ $( "#playButton" ).click(function() {
                             usageCount = usageCount + 1;
                         }
                     });
-                     
+
                     strArray.push(str);
                     inputArray.push(""  +str.charAt(0)+ count + usageCount);
                    */
-                   //change the id to first char 
+                   //change the id to first char
                     /*
-                    $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" + 
-                                                 "<label>" + str + "</label>" + 
+                    $("#input_section").append("<div id='"  + str.charAt(0) + count + usageCount + "'>" +
+                                                 "<label>" + str + "</label>" +
                                                  ": <input type=text class=form-control required></div><br>");
                     count++;
                 }
@@ -291,7 +305,7 @@ $( "#playButton" ).click(function() {
             });//end splitText.forEach
             console.log("strArray is", strArray);
             $("#input_section").append("<button type=submit onclick='submitFunction()' id='submitButton' class='btn btn-default'>Submit</button>");
-           
+
         }//end success: function
     });//end ajax put
     */
@@ -312,23 +326,23 @@ function submitFunction() {
       inputValue[i] = $('#'+ inputArray[i] + ' .form-control').val();
      // console.log("i="+i+", "+inputArray[i]);
      // console.log("i="+i+", "+inputValue[i]);
-   }    
+   }
 console.log("inputValue are:", inputValue);
 
- //post input value 
+ //post input value
   var storyUrl = "http://localhost:8000/inputs";
 
   var newInput = {
            "id": storyID,
-           "inputs": inputValue           
+           "inputs": inputValue
   };
-       
+
  $.ajax({
       type: 'POST',
       url: storyUrl,
       data: newInput,
       success: function(result) {
-        console.log("post, result= ", result);            
+        console.log("post, result= ", result);
       },
       dataType: 'json',
       async: false
@@ -336,7 +350,7 @@ console.log("inputValue are:", inputValue);
 }// end submitFunction
 
  // ====================================  Build Story ============================================
-function buildStoryFunction($storyID) {
+function buildStoryFunction($storyID, callback) {
   //console.log(storyID);
   //alert('debug');
   alert($storyID);
@@ -350,7 +364,7 @@ function buildStoryFunction($storyID) {
           success: function(result) {
             console.log(result);
             var splitText = result.story.split(/\[([^\]]+)]/);
-                
+
             storyID = result.id;
             console.log("storyID is", storyID);
             console.log("result of splitText:", splitText);
@@ -358,7 +372,7 @@ function buildStoryFunction($storyID) {
             splitText.forEach(function(entry) {
                 if (entry[0] === "[") {
                     str = entry.substring(1, entry.length);
-                    
+
                    //replacing space(s) with underscore
                    var str2 = str.split(' ').join('_');
                    str2 = str2.split('(').join(''); //omit '(''
@@ -374,7 +388,10 @@ function buildStoryFunction($storyID) {
           //console.log(splitText);
           finishedStory = splitText.toString();
           alert(finishedStory);
+          callback(finishedStory);
+
           }
         });
- 
+
+
 }
