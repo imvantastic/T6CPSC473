@@ -229,13 +229,16 @@ socket.on('showstory', function(data){
   /*var storyArray = [];*/
   
   // IS 2016-05-09 : commented out
-  /*
+  
   var i;
-  for(i=0; i<clientStoryArray.length; i++){
-
-    console.log("clientstoryArrayloop: " + clientStoryArray[i]);
+  var storyString = " ";
+  var j=0;
+  for(i=0; i<data.length; i++){
+    j++;
+    storyString = storyString + "Story " + j + "</br>" + data[i] + "</br>";
+    console.log("clientstoryArrayloop: " + storyString);
   }
-  */
+  
 
 
 
@@ -246,9 +249,10 @@ socket.on('showstory', function(data){
       "<h1>Mad Libs</h1>" + 
       "<p class=\"lead\"> Here it is!</p>"+
       "</br> Laugh it up!" +
-        "</div>" + "Stories: </br>" + 
-        "<div>" + data[0] + "</div> <br/>" +
-        "<div>" + data[1] + "</div>");
+        "</div>" + storyString);
+        //"Stories: </br>" + 
+        //"<div>" + data[0] + "</div> <br/>" +
+        //"<div>" + data[1] + "</div>");
 
   countInterval++;
 
@@ -414,6 +418,7 @@ function buildStoryFunction($storyID, callback) {
             });//end splitText.forEach
           //console.log(splitText);
           completeStory = splitText.join("");
+          completeStory = completeStory.replace(/(\])/g, " ");
           alert(completeStory);
           callback(completeStory);
 
