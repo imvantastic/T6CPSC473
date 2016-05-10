@@ -77,3 +77,9 @@ body {
     border-bottom: 0;
   }
 }
+
+/* to center align submit button */
+#btnContainer {
+  text-align: center;
+}
+
