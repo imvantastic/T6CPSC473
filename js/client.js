@@ -39,6 +39,11 @@ socket.on('waitingforhost', function() {
 
 })
 
+//IS 2016-05-09
+socket.on('checkOtherPlayerInput', function() {
+  socket.emit('waitforothers');
+})
+
 //send socket message to start game
 function startTheGame(){
   console.log("in start game fn");
@@ -47,7 +52,7 @@ function startTheGame(){
 
 //show the form host
 socket.on('showform1', function(){
-   $("div#theJumbotron").empty();
+   $("div#theJumbotron").hide();
    $("#input_section").empty();
     $.ajax({
         url: "http://localhost:8000/getStory",
@@ -112,7 +117,7 @@ socket.on('showform1', function(){
 
                   console.log("clientstoryarrayhost: " + clientStoryArray.length);
                   //clear screen and have them wai
-                  $("div#theJumbotron").empty();
+                  $("div#theJumbotron").show().empty();
                   $("#input_section").empty();
                   $("div#theJumbotron").append(storysubmitwaitingscreen);
 
@@ -131,7 +136,7 @@ socket.on('showform1', function(){
 
 //show the form to player 2
 socket.on('showform2', function(){
-   $("div#theJumbotron").empty();
+   $("div#theJumbotron").hide();
    $("#input_section").empty();
     $.ajax({
         url: "http://localhost:8000/getStory",
@@ -211,28 +216,47 @@ socket.on('showform2', function(){
 
 }) //end of show player 2 form socket
 
+var countInterval = 0;
+
 //show story
-socket.on('showstory', function(){
+socket.on('showstory', function(data){
   console.log("in client side of show story. length: " + clientStoryArray.length);
+  console.log("DEBUG - stories array = " + data);
   //console.log(data.stories.length);
   //console.log("showstorydataL: " + data.storyArray[0]);
  // var storyHolder = JSON.parse(data);
   //console.log("storyholder: " + storyHolder);
   /*var storyArray = [];*/
+  
+  // IS 2016-05-09 : commented out
+  /*
   var i;
   for(i=0; i<clientStoryArray.length; i++){
 
     console.log("clientstoryArrayloop: " + clientStoryArray[i]);
   }
+  */
 
-  $("div#theJumbotron").empty();
+
+
+  $("div#theJumbotron").show().empty();
   $("#input_section").empty();
   //$("div#theJumbotron").append(showstoryheader);
   $("div#theJumbotron").append("<div class=\"jumbotron\" id=\"theJumbotron\">" +
       "<h1>Mad Libs</h1>" + 
       "<p class=\"lead\"> Here it is!</p>"+
       "</br> Laugh it up!" +
-        "</div>" + "Stories: </br>" + clientStoryArray[0]);
+        "</div>" + "Stories: </br>" + 
+        "<div>" + data[0] + "</div> <br/>" +
+        "<div>" + data[1] + "</div>");
+
+  countInterval++;
+
+  //terminate set interval if both stories are printed
+  if (countInterval == 2) {
+    socket.emit('terminateSetInterval');
+  }
+
 })
 //end of show story
 
@@ -359,7 +383,7 @@ function buildStoryFunction($storyID, callback) {
   //alert('debug');
   alert($storyID);
   var index = 0;
-  var finishedStory;
+  var completeStory;
 
   $.ajax({url: "http://localhost:8000/getStoryById",
           data: {storyID : $storyID},
@@ -384,15 +408,14 @@ function buildStoryFunction($storyID, callback) {
                    str2 = str2.split('\'').join(''); //omit single quote
 
                     var input1 = $('input[name='+str2+']').val();
-
                     splitText[index] = input1;
                 }
                 index++;
             });//end splitText.forEach
           //console.log(splitText);
-          finishedStory = splitText.toString();
-          alert(finishedStory);
-          callback(finishedStory);
+          completeStory = splitText.join("");
+          alert(completeStory);
+          callback(completeStory);
 
           }
         });

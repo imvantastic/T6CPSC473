@@ -123,10 +123,16 @@ var storyArray = {
 var gamestatus = "not started";
 console.log("io: " + io);
 
+// setInterval function()
+//var inputInterval;
+var intervals = [];
+
+
 //when a player connects; socket starts here
 io.sockets.on('connection', function(socket){
     console.log("user connected");
     var player = new playerDef(socket.id);
+    
     playersArray.push(player);
 
     console.log(player);
@@ -184,19 +190,26 @@ io.sockets.on('connection', function(socket){
     //grab and hold story
     socket.on('waitforothers', function(data){
         console.log("in waitforothers");
-        //add story to array
-        var tempstory=data.story;
-        //attempt to make a json array to pass
-        storyArray.addElem({story: tempstory});
-        //pushing to the regular stories array defined as []
-        stories.push(tempstory);
+        
+        //IS 2016-05-09: append array only if data is defined
+        if (typeof data != 'undefined') {
+            //add story to array
+            var tempstory=data.story;
+            //attempt to make a json array to pass
+            storyArray.addElem({story: tempstory});
+            //pushing to the regular stories array defined as []
+            stories.push(tempstory);
+        }
+
         //if all stories are submitted, show them
         if(playersArray.length == stories.length){
             //show stories
             console.log("in show stories");
             //adjust this to pass the json object
             //socket.emit('showstory', {storyArray: storyArray});
-            socket.emit('showstory');
+
+            socket.emit('showstory', stories);
+
         }
         else{
             console.log("in nothing of waitforothers");
@@ -204,6 +217,21 @@ io.sockets.on('connection', function(socket){
             console.log(playersArray.length===stories.length);
             //do nothing
             //socket.emit('waitstoryscreen');
+
+            //IS 2016-05-09 - checking for other players' submission - 5 seconds
+            var inputInterval = setInterval(function() {
+                socket.emit('checkOtherPlayerInput');
+            },5000);
+
+            intervals.push(inputInterval);
+        }
+    })
+
+    socket.on('terminateSetInterval', function () {
+         //IS 2016-05-09: break from inputInterval if it's defined
+        if (intervals != null) {
+            intervals.forEach(clearInterval);
+            //clearInterval(inputInterval);
         }
     })
 
