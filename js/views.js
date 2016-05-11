@@ -42,5 +42,28 @@ var storysubmitwaitingscreen = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
 var showstoryheader = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
 			"<h1>Mad Libs</h1>" + 
 			"<p class=\"lead\"> Here it is!</p>"+
-			"</br> Laugh it up!" +
-		    "</div>";		     		    
+			"Laugh it up!" +
+		    "</div>";
+
+//about
+var about = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
+			"<h1>Mad Libs</h1>" + 
+			"<p class=\"lead\"> About</p>"+
+			"Mad Libs is a fun game that can be played by anyone. It takes your input and creates stories for everyone to read." +
+		    "</div>";		    		     		    
+
+//how to play
+var howtoplay = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
+			"<h1>Mad Libs</h1>" + 
+			"<p class=\"lead\">How to Play</p>"+
+			"Wait for a host or host your own! Once the game starts, fill in the blanks" 
+			+ " with the requested input and then hit submit. Once all of" + 
+			" the players have entered their words, your story and theirs will be sent back to you to read! You can play with as little or as many people as you want." +
+		    "</div>";		    
+
+//about
+var contact = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
+			"<h1>Mad Libs</h1>" + 
+			"<p class=\"lead\"> Contact Us</p>"+
+			"Write down your thoughts, fold it into a paper airplane and toss it into the sky. Once we receive it, we'll be sure to read it!" +
+		    "</div>";
