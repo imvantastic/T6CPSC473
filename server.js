@@ -60,8 +60,11 @@ var jsonStory = "stories.json";
 //Inserts sample mad lib story
 var insertStory = function(db, callback) {
     var collection = db.collection('stories');
-    collection.insertOne(
-        {story:"Say cheese the photographer said as the camera flashed! and I had gone to to get our photos taken today. The first photo we really wanted was a picture of us dressed as [[Animals]] pretending to be a [[Feeling]]. When we saw the proofs of it, I was a bit [[Things (Plural)]] because it looked different than in my head. (I hadn't imagined so many [[A Professional (like 'Baker')]] behind us.)"},
+    collection.insert(
+        [
+            {story:"Say cheese the photographer said as the camera flashed! and I had gone to to get our photos taken today. The first photo we really wanted was a picture of us dressed as [[Animals]] pretending to be [[Feeling]]. When we saw the proofs of it, I was a bit [[Things (Plural)]] because it looked different than in my head. (I hadn't imagined so many [[A Professional (like 'Baker')]] behind us.)"},
+            {story:"A vacation is when you take a trip to some [[Adjective]] place with your [[Adjective (2nd)]] family. Usually you go to some place that is near a/an [[Noun]] or up on a/an [[Noun (2nd)]]. A good vacation place is one where you can ride [[Animal (Plural)]] or play [[Game]]."}
+        ],
         function(err, result) {
             console.log("Mongo Insertion Error:" + err);
             callback(result);
@@ -238,13 +241,22 @@ io.sockets.on('connection', function(socket){
 });
 //SOCKETS END
 
+var fixedInt;
+
 //Return story and stories id
 app.get("/getStory", function(req, res) {
+    if (typeof req.query.randomNum != 'undefined' && req.query.randomNum != 7 ) {
+        console.log('DEBUG - the random number is = ' + req.query.randomNum);
+        fixedInt = req.query.randomNum;
+    }
     MongoClient.connect(url, function(err, db) {
         findStory(db, function(doc) {
+            
+            console.log("Fixed integer = " + fixedInt);
+           
             res.json({
-                story: doc[0].story,
-                id: doc[0]._id
+                story: doc[fixedInt].story,
+                id: doc[fixedInt]._id
             });
             db.close();
         });
