@@ -101,7 +101,8 @@ socket.on('showform1', function(){
 
             });//end splitText.forEach
             console.log("strArray is", strArray);
-            $("#input_section").append("<button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
+            $("#input_section").append("<div id='btnContainer'><button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
+            $("#input_section").append("</div>");
 
             //onclick() function for submitButton
             var submitButton = document.getElementById("submitButton");
@@ -185,7 +186,8 @@ socket.on('showform2', function(){
 
             });//end splitText.forEach
             console.log("strArray is", strArray);
-            $("#input_section").append("<button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
+            $("#input_section").append("<div id='btnContainer'><button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
+            $("#input_section").append("</div>");
 
             console.log("in show form 2");
             //onclick() function for submitButton
@@ -235,7 +237,7 @@ socket.on('showstory', function(data){
   var j=0;
   for(i=0; i<data.length; i++){
     j++;
-    storyString = storyString + "Story " + j + "</br>" + data[i] + "</br>";
+    storyString = storyString + "<h4>Story " + j + "</h4>" + data[i] + "</br>";
     console.log("clientstoryArrayloop: " + storyString);
   }
   
@@ -385,7 +387,7 @@ console.log("inputValue are:", inputValue);
 function buildStoryFunction($storyID, callback) {
   //console.log(storyID);
   //alert('debug');
-  alert($storyID);
+  //alert($storyID);
   var index = 0;
   var completeStory;
 
@@ -411,7 +413,7 @@ function buildStoryFunction($storyID, callback) {
                    str2 = str2.split(')').join(''); //omit ')'
                    str2 = str2.split('\'').join(''); //omit single quote
 
-                    var input1 = $('input[name='+str2+']').val();
+                    var input1 = "<strong>" + $('input[name='+str2+']').val() + "</strong>";
                     splitText[index] = input1;
                 }
                 index++;
@@ -419,7 +421,7 @@ function buildStoryFunction($storyID, callback) {
           //console.log(splitText);
           completeStory = splitText.join("");
           completeStory = completeStory.replace(/(\])/g, " ");
-          alert(completeStory);
+          //alert(completeStory);
           callback(completeStory);
 
           }
