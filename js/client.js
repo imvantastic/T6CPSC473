@@ -54,9 +54,18 @@ function startTheGame(){
 socket.on('showform1', function(){
    $("div#theJumbotron").hide();
    $("#input_section").empty();
+    
+    // defining random number to pull story from DB
+    if (typeof fixedInt != 'defined') {
+        var i = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
+        var fixedInt = i;
+        console.log ('fixedInt is UNDEFINED');
+    }
+
     $.ajax({
         url: "http://localhost:8000/getStory",
         type: "GET",
+        data: {randomNum : fixedInt},
         dataType: "json",
         success: function(result){
             var splitText = result.story.split(/\[([^\]]+)]/),
@@ -139,9 +148,11 @@ socket.on('showform1', function(){
 socket.on('showform2', function(){
    $("div#theJumbotron").hide();
    $("#input_section").empty();
+    var num = 7;
     $.ajax({
         url: "http://localhost:8000/getStory",
         type: "GET",
+        data: {randomNum : num},
         dataType: "json",
         success: function(result){
             var splitText = result.story.split(/\[([^\]]+)]/),
@@ -173,7 +184,7 @@ socket.on('showform2', function(){
                    //change the id to first char
 
                     //replacing space(s) with underscore
-                   var str2 = str.split(' ([])').join('_');
+                   var str2 = str.split(' ').join('_');
                    str2 = str2.split('(').join(''); //omit '('
                    str2 = str2.split(')').join(''); // omit ')'
                    str2 = str2.split('\'').join(''); // omit single quote
@@ -203,7 +214,7 @@ socket.on('showform2', function(){
 
                   console.log("clientstoryarray2: " + clientStoryArray.length);
                   //clear screen and have them wai
-                  $("div#theJumbotron").empty();
+                  $("div#theJumbotron").empty().show();
                   $("#input_section").empty();
                   $("div#theJumbotron").append(storysubmitwaitingscreen);
 
