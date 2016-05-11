@@ -428,3 +428,26 @@ function buildStoryFunction($storyID, callback) {
 
 
 }
+
+//NAVIGATION BAR-------------------------
+
+//onclick() function for how to play
+$("#howtoplay").on('click', function() {
+  $("div#theJumbotron").empty();
+  $("#input_section").empty();
+  $("div#theJumbotron").append(howtoplay);   
+});
+
+//onclick() function for about
+$("#about").on('click', function() {
+  $("div#theJumbotron").empty();
+  $("#input_section").empty();
+  $("div#theJumbotron").append(about);   
+});
+
+//onclick() function for contact
+$("#contact").on('click', function() {
+  $("div#theJumbotron").empty();
+  $("#input_section").empty();
+  $("div#theJumbotron").append(contact);   
+});
