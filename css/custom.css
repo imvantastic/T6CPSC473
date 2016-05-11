@@ -1,0 +1,8 @@
+.story{
+	border-style: double;
+	border-width: 5px;
+	border-color: #ff4dd2;
+	margin: 15px 15px 25px 15px;
+	background-color: #ffccf2;
+	border-radius: 15px 15px 15px 15px;
+}
