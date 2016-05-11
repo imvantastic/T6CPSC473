@@ -237,7 +237,7 @@ socket.on('showstory', function(data){
   var j=0;
   for(i=0; i<data.length; i++){
     j++;
-    storyString = storyString + "<h4>Story " + j + "</h4>" + data[i] + "</br>";
+    storyString = storyString + "<div class=\"story\"><h4>Story " + j + "</h4>" + data[i] + "</div></br>";
     console.log("clientstoryArrayloop: " + storyString);
   }
   
@@ -249,8 +249,7 @@ socket.on('showstory', function(data){
   //$("div#theJumbotron").append(showstoryheader);
   $("div#theJumbotron").append("<div class=\"jumbotron\" id=\"theJumbotron\">" +
       "<h1>Mad Libs</h1>" + 
-      "<p class=\"lead\"> Here it is!</p>"+
-      "</br> Laugh it up!" +
+      "<p class=\"lead\"> Everyone is done! Read their stories and see what your friends came up with.</p>"+
         "</div>" + storyString);
         //"Stories: </br>" + 
         //"<div>" + data[0] + "</div> <br/>" +
