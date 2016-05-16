@@ -118,6 +118,10 @@ socket.on('showform1', function() {
                     //onclick() function for submitButton
                     var submitButton = document.getElementById("submitButton");
                     submitButton.addEventListener('click', function() {
+                        // ========check if no empty input, then build story
+                        if(!checkInput(inputArray)){
+                           return ;
+                        }
                         //build story
                         var story;
                         buildStoryFunction(storyID, function(newstory) {
@@ -210,6 +214,10 @@ socket.on('showform2', function() {
                     //onclick() function for submitButton
                     var submitButton = document.getElementById("submitButton");
                     submitButton.addEventListener('click', function() {
+                        // ========check if no empty input, then build story
+                        if(!checkInput(inputArray)){
+                            return ;
+                        }
                         //buildStoryFunction(storyID);
                         //build story
                         var story2;
@@ -311,7 +319,23 @@ $("#playButton").click(function() {
     });
 }); //end click play
 
-
+// =========  Form Validation =========================== 
+function checkInput(inputArray) {
+  console.log("inputArray is", inputArray[0]);
+  var totalInput = inputArray.length;
+  console.log("totalInput is:", totalInput);
+  var inputValue = [];
+  for (var i = 0; i <totalInput; i++) {       
+    inputValue[i] = $('#'+ inputArray[i] + ' .form-control').val();
+    console.log("inputValue is", inputValue);
+    if(inputValue[i] === "") {
+        alert("SOORY, Please fill out the form");          
+        return false;
+     } 
+    //console.log("i="+i+", "+ inputValue[i]);
+  }  
+  return true;
+}
 
 // ====================================  submit input ============================================
 //can comment out
