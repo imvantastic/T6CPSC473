@@ -312,12 +312,11 @@ function submitUserStory() {
     if ($("#storyinput").val() != "") {
         if ($("#storyinput").val().indexOf("[[") != -1 && $("#storyinput").val().indexOf("]]") != -1) {
             console.log("Story being submitted: " + $("#storyinput").val());
-            $.post("http://localhost:8000/submitStory", {
-                userStory: $("#storyinput").val()
-            }, function(data, status) {
+            alert("Story submitted");
+            $.post("http://localhost:8000/submitStory", {userStory: $("#storyinput").val()}, function(data, status) {
                 console.log("Data:" + data + "\n Status: " + status);
-                alert("Story submitted");
-            })
+            });
+
         } else {
             alert("Madlib must contain at least one fill in the blank.");
         }

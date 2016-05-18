@@ -301,10 +301,26 @@ app.post("/submitStory", function(req, res) {
         addUserStory(db, req.body.userStory, function(result) {
             console.log("User submission: " + result);
             db.close();
-        })
+        });
 
     });
 
+});
+
+app.get("/storyCount", function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+
+        var collection = db.collection('stories');
+        collection.count({}, function(err, count) {
+            console.log("Mongo Count Error: ");
+            res.json({
+                storyCount: count
+            });
+            db.close();
+        })
+
+
+    });
 })
 
 //Return story and stories id
