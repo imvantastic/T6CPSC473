@@ -76,3 +76,8 @@ var contact = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
     "<p class=\"lead\"> Contact Us</p>" +
     "Write down your thoughts, fold it into a paper airplane and toss it into the sky. Once we receive it, we'll be sure to read it!" +
     "</div>";
+
+//word generator
+var wordgen = "<div class=\"wordHolder\" id=\"wordHolder\">Need Help?</div></br>" +
+        "<button onclick=\"generateWord()\" id=\"hostButton\" class=\"btn btn-sm btn-success\"" +
+        "role=\"button\">Generate a Random Word</button>"

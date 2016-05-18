@@ -4,7 +4,9 @@ var express = require("express"),
     MongoClient = require('mongodb').MongoClient,
     mongo = require('mongodb'),
     server = http.createServer(app),
-    io = require("socket.io").listen(server);
+    io = require("socket.io").listen(server),
+    randomWord = require('random-word'),
+    Shake = require('shake.js');
 
 //post need bodyparser
 var bodyParser = require("body-parser");
@@ -20,7 +22,7 @@ app.use(bodyParser.json());
 
 
 
-
+var storyCount = 0;
 //filesystem
 var fs = require('fs');
 
@@ -61,6 +63,7 @@ var insertStory = function(db, callback) {
             console.log("Mongo Insertion Error:" + err);
             callback(result);
         });
+    storyCount = db.collection.count('stories');
 };
 
 //Find random mad lib story from the database to use
@@ -191,6 +194,9 @@ io.sockets.on('connection', function(socket) {
     //start game
     socket.on('startgame', function() {
         console.log("in socket on of start game");
+        //var storyCount = db.collection().count('stories');
+        console.log("storyCount: " + storyCount);
+        gamestatus = "started";
         io.to('host').emit('showform1');
         io.to('gameroom').emit('showform2');
         //socket.emit('showform');
@@ -244,6 +250,37 @@ io.sockets.on('connection', function(socket) {
             //clearInterval(inputInterval);
         }
     })
+
+//Generate a Random Word---------------------------
+//function generateWord() {
+socket.on('generateWord', function(){
+    var rword = randomWord();
+    io.to(socket.id).emit('wordGenerated', {word : rword});
+    //socket.emit('generateWord');
+})
+
+if(gamestatus == "started"){
+    //create shake event start
+        var shakeEvent = new Shake({
+            threshold: 15
+        });
+
+        var stopShake = function() {
+            shakeEvent.stop();
+        };
+
+        shakeEvent.start();
+
+        window.addEventListener('shake', (function() {
+            var rword = randomWord();
+            io.to(socket.id).emit('wordGenerated', {word : rword});
+        }), false);
+
+        if (!('ondevicemotion' in window)) {
+            alert('Shaking Not Supported');
+        }
+        //create shake event end
+}
 
 });
 //SOCKETS END
@@ -392,6 +429,3 @@ var findInput = function(db, callback) {
     });
 };
 
-
-
-//http.createServer(app).listen(8000);
