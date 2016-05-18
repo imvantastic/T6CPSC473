@@ -66,99 +66,104 @@ socket.on('showform1', function() {
 
         // defining random number to pull story from DB
         if (typeof fixedInt != 'defined') {
-            var i = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
-            console.log(i);
-            var fixedInt = i;
-            console.log('fixedInt is UNDEFINED');
+            $.get("http://localhost:8000/storyCount", function(data, status) {
+                var max = data.storyCount
+                var i = Math.floor(Math.random() * (1 - 0 + max)) + 0;
+                console.log(i);
+                var fixedInt = i;
+                console.log('fixedInt is UNDEFINED');
+                $.ajax({
+                    url: "http://localhost:8000/getStory",
+                    type: "GET",
+                    data: {
+                        randomNum: fixedInt
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                            var splitText = result.story.split(/\[([^\]]+)]/),
+
+                                str,
+                                usageCount;
+
+                            storyID = result.id;
+                            console.log("storyID is", storyID);
+                            console.log("result of splitText:", splitText);
+
+                            $("#input_section").append("<h2>Please fill in the blanks below!");
+
+                            splitText.forEach(function(entry) {
+                                if (entry[0] === "[") {
+                                    console.log("entry is", entry);
+                                    usageCount = 1;
+                                    str = entry.substring(1, entry.length);
+                                    console.log("str is:", str);
+                                    strArray.forEach(function(entry) {
+                                        if (entry === str) {
+                                            usageCount = usageCount + 1;
+                                        }
+                                    });
+
+                                    strArray.push(str);
+                                    inputArray.push("" + str.charAt(0) + count + usageCount);
+
+                                    //change the id to first char
+
+                                    //replacing space(s) with underscore
+                                    var str2 = str.split(' ').join('_');
+                                    str2 = str2.split('(').join(''); //omit '('
+                                    str2 = str2.split(')').join(''); // omit ')'
+                                    str2 = str2.split('\'').join(''); // omit single quote
+
+                                    $("#input_section").append("<div id='" + str.charAt(0) + count + usageCount + "'>" +
+                                        "<label>" + str + "</label>" +
+                                        ": <input type=text name=" + str2 + " class=form-control required></div><br>");
+                                    count++;
+                                }
+
+                            }); //end splitText.forEach
+                            console.log("strArray is", strArray);
+                            $("#input_section").append("<div id='btnContainer'><button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
+                            $("#input_section").append("</div>");
+
+                            //onclick() function for submitButton
+                            var submitButton = document.getElementById("submitButton");
+                            submitButton.addEventListener('click', function() {
+                                // ========check if no empty input, then build story
+                                if (!checkInput(inputArray)) {
+                                    return;
+                                }
+                                //build story
+                                var story;
+                                buildStoryFunction(storyID, function(newstory) {
+                                    story = newstory
+                                    clientStoryArray.push(story);
+                                    console.log(story);
+
+                                    //add to story array
+
+                                    console.log("clientstoryarrayhost: " + clientStoryArray.length);
+                                    //clear screen and have them wait
+                                    $("div#wordgenerator").empty();
+                                    $("div#theJumbotron").show().empty();
+                                    $("#input_section").empty();
+                                    $("div#theJumbotron").append(storysubmitwaitingscreen);
+
+                                    //send the story and wait
+                                    socket.emit('waitforothers', {
+                                        story: story
+                                    });
+                                });
+                            });
+
+
+
+                        } //end success: function
+                }); //end ajax put
+
+            })
+
         }
 
-        $.ajax({
-            url: "http://localhost:8000/getStory",
-            type: "GET",
-            data: {
-                randomNum: fixedInt
-            },
-            dataType: "json",
-            success: function(result) {
-                    var splitText = result.story.split(/\[([^\]]+)]/),
-
-                        str,
-                        usageCount;
-
-                    storyID = result.id;
-                    console.log("storyID is", storyID);
-                    console.log("result of splitText:", splitText);
-
-                    $("#input_section").append("<h2>Please fill in the blanks below!");
-
-                    splitText.forEach(function(entry) {
-                        if (entry[0] === "[") {
-                            console.log("entry is", entry);
-                            usageCount = 1;
-                            str = entry.substring(1, entry.length);
-                            console.log("str is:", str);
-                            strArray.forEach(function(entry) {
-                                if (entry === str) {
-                                    usageCount = usageCount + 1;
-                                }
-                            });
-
-                            strArray.push(str);
-                            inputArray.push("" + str.charAt(0) + count + usageCount);
-
-                            //change the id to first char
-
-                            //replacing space(s) with underscore
-                            var str2 = str.split(' ').join('_');
-                            str2 = str2.split('(').join(''); //omit '('
-                            str2 = str2.split(')').join(''); // omit ')'
-                            str2 = str2.split('\'').join(''); // omit single quote
-
-                            $("#input_section").append("<div id='" + str.charAt(0) + count + usageCount + "'>" +
-                                "<label>" + str + "</label>" +
-                                ": <input type=text name=" + str2 + " class=form-control required></div><br>");
-                            count++;
-                        }
-
-                    }); //end splitText.forEach
-                    console.log("strArray is", strArray);
-                    $("#input_section").append("<div id='btnContainer'><button type=submit id='submitButton' class='btn btn-default'>Submit</button>");
-                    $("#input_section").append("</div>");
-
-                    //onclick() function for submitButton
-                    var submitButton = document.getElementById("submitButton");
-                    submitButton.addEventListener('click', function() {
-                        // ========check if no empty input, then build story
-                        if (!checkInput(inputArray)) {
-                            return;
-                        }
-                        //build story
-                        var story;
-                        buildStoryFunction(storyID, function(newstory) {
-                            story = newstory
-                            clientStoryArray.push(story);
-                            console.log(story);
-
-                            //add to story array
-
-                            console.log("clientstoryarrayhost: " + clientStoryArray.length);
-                            //clear screen and have them wait
-                            $("div#wordgenerator").empty();
-                            $("div#theJumbotron").show().empty();
-                            $("#input_section").empty();
-                            $("div#theJumbotron").append(storysubmitwaitingscreen);
-
-                            //send the story and wait
-                            socket.emit('waitforothers', {
-                                story: story
-                            });
-                        });
-                    });
-
-
-
-                } //end success: function
-        }); //end ajax put
 
     }) //end of show host form socket
 
@@ -312,12 +317,11 @@ function submitUserStory() {
     if ($("#storyinput").val() != "") {
         if ($("#storyinput").val().indexOf("[[") != -1 && $("#storyinput").val().indexOf("]]") != -1) {
             console.log("Story being submitted: " + $("#storyinput").val());
-            $.post("http://localhost:8000/submitStory", {
-                userStory: $("#storyinput").val()
-            }, function(data, status) {
+            alert("Story submitted");
+            $.post("http://localhost:8000/submitStory", {userStory: $("#storyinput").val()}, function(data, status) {
                 console.log("Data:" + data + "\n Status: " + status);
-                alert("Story submitted");
-            })
+            });
+
         } else {
             alert("Madlib must contain at least one fill in the blank.");
         }
