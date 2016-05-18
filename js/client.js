@@ -2,6 +2,7 @@ var clientStoryArray = [];
 
 var socket = io.connect('http://localhost:8000');
 
+
 //reset game on disconnect
 socket.on('reset game', function(data) {
     $("div#theJumbotron").empty();
@@ -52,6 +53,10 @@ function startTheGame() {
 
 //show the form host
 socket.on('showform1', function() {
+        
+        $("div#wordgenerator").empty();
+        $("div#wordgenerator").append(wordgen);
+
         $("div#theJumbotron").hide();
         $("#input_section").empty();
 
@@ -155,6 +160,9 @@ socket.on('showform1', function() {
 
 //show the form to player 2
 socket.on('showform2', function() {
+        $("div#wordgenerator").empty();
+        $("div#wordgenerator").append(wordgen);
+
         $("div#theJumbotron").hide();
         $("#input_section").empty();
         var num = 7;
@@ -269,9 +277,7 @@ socket.on('showstory', function(data) {
             console.log("clientstoryArrayloop: " + storyString);
         }
 
-
-
-
+        $("div#wordgenerator").empty();
         $("div#theJumbotron").show().empty();
         $("#input_section").empty();
         //$("div#theJumbotron").append(showstoryheader);
@@ -305,7 +311,7 @@ function submitUserStory() {
                 alert("Story submitted");
             })
         } else {
-            alert("Madlib must contain atleast one fill in the blank.");
+            alert("Madlib must contain at least one fill in the blank.");
         }
     } else {
         alert("You have not entered a story yet.");
@@ -469,6 +475,22 @@ $("#contact").on('click', function() {
 //onclick() function for contact
 $("#addstory").on('click', function() {
     $("div#theJumbotron").empty();
+    $("div#wordgenerator").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(addstoryscreen);
 });
+
+//Generate a Random Word---------------------------
+socket.on('generateWord', function(){
+
+})
+
+function generateWord() {
+    socket.emit('generateWord');
+}
+
+socket.on('wordGenerated', function(data){
+    $("div#wordHolder").empty();
+    $("div#wordHolder").append(data.word);
+})
+

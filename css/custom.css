@@ -6,3 +6,26 @@
 	background-color: #ffccf2;
 	border-radius: 15px 15px 15px 15px;
 }
+
+.wordgenerator{
+	background-color: #ff3399;
+	border-width: 5px;
+	border-color: #ff4dd2;
+	border-radius: 10px 10px 10px 10px;
+	text-align: center;
+	left:650px;
+    top:150px;
+    max-width: 50%;
+    vertical-align: center;
+}
+
+.wordHolder{
+	left:500px;
+    top:100px;
+    text-align: center;
+    font-weight: bold;
+}
+
+h4{
+	font-weight: bold;
+}
