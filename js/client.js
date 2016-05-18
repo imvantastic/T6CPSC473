@@ -14,6 +14,7 @@ socket.on('reset game', function(data) {
 //creates the html to create the lobby
 socket.on('reload lobby', function(data) {
     $("div#theJumbotron").empty();
+    $("div#wordgenerator").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(homescreen);
 })
@@ -26,6 +27,7 @@ function hostGame() {
 
 //setupgame
 socket.on('setupgame', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(setupscreen);
@@ -34,6 +36,7 @@ socket.on('setupgame', function() {
 
 //tell other players to wait
 socket.on('waitingforhost', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(waitingscreen);
@@ -53,7 +56,7 @@ function startTheGame() {
 
 //show the form host
 socket.on('showform1', function() {
-        
+
         $("div#wordgenerator").empty();
         $("div#wordgenerator").append(wordgen);
 
@@ -125,8 +128,8 @@ socket.on('showform1', function() {
                     var submitButton = document.getElementById("submitButton");
                     submitButton.addEventListener('click', function() {
                         // ========check if no empty input, then build story
-                        if(!checkInput(inputArray)){
-                           return ;
+                        if (!checkInput(inputArray)) {
+                            return;
                         }
                         //build story
                         var story;
@@ -138,7 +141,8 @@ socket.on('showform1', function() {
                             //add to story array
 
                             console.log("clientstoryarrayhost: " + clientStoryArray.length);
-                            //clear screen and have them wai
+                            //clear screen and have them wait
+                            $("div#wordgenerator").empty();
                             $("div#theJumbotron").show().empty();
                             $("#input_section").empty();
                             $("div#theJumbotron").append(storysubmitwaitingscreen);
@@ -224,8 +228,8 @@ socket.on('showform2', function() {
                     var submitButton = document.getElementById("submitButton");
                     submitButton.addEventListener('click', function() {
                         // ========check if no empty input, then build story
-                        if(!checkInput(inputArray)){
-                            return ;
+                        if (!checkInput(inputArray)) {
+                            return;
                         }
                         //buildStoryFunction(storyID);
                         //build story
@@ -236,7 +240,8 @@ socket.on('showform2', function() {
                             //add to story array
 
                             console.log("clientstoryarray2: " + clientStoryArray.length);
-                            //clear screen and have them wai
+                            //clear screen and have them wait
+                            $("div#wordgenerator").empty();
                             $("div#theJumbotron").empty().show();
                             $("#input_section").empty();
                             $("div#theJumbotron").append(storysubmitwaitingscreen);
@@ -306,7 +311,9 @@ function submitUserStory() {
     if ($("#storyinput").val() != "") {
         if ($("#storyinput").val().indexOf("[[") != -1 && $("#storyinput").val().indexOf("]]") != -1) {
             console.log("Story being submitted: " + $("#storyinput").val());
-            $.post("http://localhost:8000/submitStory", {userStory: $("#storyinput").val()}, function(data, status) {
+            $.post("http://localhost:8000/submitStory", {
+                userStory: $("#storyinput").val()
+            }, function(data, status) {
                 console.log("Data:" + data + "\n Status: " + status);
                 alert("Story submitted");
             })
@@ -347,20 +354,20 @@ $("#playButton").click(function() {
 
 // =========  Form Validation ===========================
 function checkInput(inputArray) {
-  console.log("inputArray is", inputArray[0]);
-  var totalInput = inputArray.length;
-  console.log("totalInput is:", totalInput);
-  var inputValue = [];
-  for (var i = 0; i <totalInput; i++) {
-    inputValue[i] = $('#'+ inputArray[i] + ' .form-control').val();
-    console.log("inputValue is", inputValue);
-    if(inputValue[i] === "") {
-        alert("SOORY, Please fill out the form");
-        return false;
-     }
-    //console.log("i="+i+", "+ inputValue[i]);
-  }
-  return true;
+    console.log("inputArray is", inputArray[0]);
+    var totalInput = inputArray.length;
+    console.log("totalInput is:", totalInput);
+    var inputValue = [];
+    for (var i = 0; i < totalInput; i++) {
+        inputValue[i] = $('#' + inputArray[i] + ' .form-control').val();
+        console.log("inputValue is", inputValue);
+        if (inputValue[i] === "") {
+            alert("SOORY, Please fill out the form");
+            return false;
+        }
+        //console.log("i="+i+", "+ inputValue[i]);
+    }
+    return true;
 }
 
 // ====================================  submit input ============================================
@@ -453,6 +460,7 @@ function buildStoryFunction($storyID, callback) {
 
 //onclick() function for how to play
 $("#howtoplay").on('click', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(howtoplay);
@@ -460,6 +468,7 @@ $("#howtoplay").on('click', function() {
 
 //onclick() function for about
 $("#about").on('click', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(about);
@@ -467,6 +476,7 @@ $("#about").on('click', function() {
 
 //onclick() function for contact
 $("#contact").on('click', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(contact);
@@ -474,6 +484,7 @@ $("#contact").on('click', function() {
 
 //onclick() function for contact
 $("#addstory").on('click', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("div#wordgenerator").empty();
     $("#input_section").empty();
@@ -481,7 +492,7 @@ $("#addstory").on('click', function() {
 });
 
 //Generate a Random Word---------------------------
-socket.on('generateWord', function(){
+socket.on('generateWord', function() {
 
 })
 
@@ -489,8 +500,7 @@ function generateWord() {
     socket.emit('generateWord');
 }
 
-socket.on('wordGenerated', function(data){
+socket.on('wordGenerated', function(data) {
     $("div#wordHolder").empty();
     $("div#wordHolder").append(data.word);
 })
-
