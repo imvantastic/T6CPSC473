@@ -14,6 +14,7 @@ socket.on('reset game', function(data) {
 //creates the html to create the lobby
 socket.on('reload lobby', function(data) {
     $("div#theJumbotron").empty();
+    $("div#wordgenerator").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(homescreen);
 })
@@ -26,6 +27,7 @@ function hostGame() {
 
 //setupgame
 socket.on('setupgame', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(setupscreen);
@@ -34,6 +36,7 @@ socket.on('setupgame', function() {
 
 //tell other players to wait
 socket.on('waitingforhost', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(waitingscreen);
@@ -138,7 +141,8 @@ socket.on('showform1', function() {
                             //add to story array
 
                             console.log("clientstoryarrayhost: " + clientStoryArray.length);
-                            //clear screen and have them wai
+                            //clear screen and have them wait
+                            $("div#wordgenerator").empty();
                             $("div#theJumbotron").show().empty();
                             $("#input_section").empty();
                             $("div#theJumbotron").append(storysubmitwaitingscreen);
@@ -236,7 +240,8 @@ socket.on('showform2', function() {
                             //add to story array
 
                             console.log("clientstoryarray2: " + clientStoryArray.length);
-                            //clear screen and have them wai
+                            //clear screen and have them wait
+                            $("div#wordgenerator").empty();
                             $("div#theJumbotron").empty().show();
                             $("#input_section").empty();
                             $("div#theJumbotron").append(storysubmitwaitingscreen);
@@ -455,6 +460,7 @@ function buildStoryFunction($storyID, callback) {
 
 //onclick() function for how to play
 $("#howtoplay").on('click', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(howtoplay);
@@ -462,6 +468,7 @@ $("#howtoplay").on('click', function() {
 
 //onclick() function for about
 $("#about").on('click', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(about);
@@ -469,6 +476,7 @@ $("#about").on('click', function() {
 
 //onclick() function for contact
 $("#contact").on('click', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(contact);
@@ -476,6 +484,7 @@ $("#contact").on('click', function() {
 
 //onclick() function for contact
 $("#addstory").on('click', function() {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("div#wordgenerator").empty();
     $("#input_section").empty();
