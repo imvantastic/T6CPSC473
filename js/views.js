@@ -21,6 +21,16 @@ var waitingscreen = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
     "</br> Just wait it'll be fun!" +
     "</div>";
 
+//screen to add story
+var addstoryscreen = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
+    "<h1>Add Story</h1>" +
+    "<p>Type a madlib into the textbox.</p>" +
+    "Make sure to surround the word to be filled in with double brackets." +
+    "</br></br>Example: [[Exclamation]], he said [[Adverb]] as he jumped into his car." +
+    "</br></br><textarea type=\"text\" id=\"storyinput\" cols=\"50\" rows=\"5\"></textarea>" +
+    "</br><button onclick=\"submitUserStory()\" id=\"startButton\" class=\"btn btn-lg btn-success\" role=\"button\">Submit Story</button>" +
+    "</div>";
+
 //screen after host disconnects
 var resethomescreen = "<div class=\"jumbotron\" id=\"theJumbotron\">" +
     "<h1>Mad Libs</h1>" +
