@@ -58,6 +58,7 @@ socket.on('showform1', function() {
         // defining random number to pull story from DB
         if (typeof fixedInt != 'defined') {
             var i = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
+            console.log(i);
             var fixedInt = i;
             console.log('fixedInt is UNDEFINED');
         }
@@ -278,7 +279,7 @@ socket.on('showstory', function(data) {
             "<h1>Mad Libs</h1>" +
             "<p class=\"lead\"> Everyone is done! Read their stories and see what your friends came up with.</p>" +
             "</div>" + storyString);
-        //"Stories: </br>" + 
+        //"Stories: </br>" +
         //"<div>" + data[0] + "</div> <br/>" +
         //"<div>" + data[1] + "</div>");
 
@@ -291,6 +292,25 @@ socket.on('showstory', function(data) {
 
     })
     //end of show story
+
+
+//Submit user created story
+function submitUserStory() {
+
+    if ($("#storyinput").val() != "") {
+        if ($("#storyinput").val().indexOf("[[") != -1 && $("#storyinput").val().indexOf("]]") != -1) {
+            console.log("Story being submitted: " + $("#storyinput").val());
+            $.post("http://localhost:8000/submitStory", {userStory: $("#storyinput").val()}, function(data, status) {
+                console.log("Data:" + data + "\n Status: " + status);
+                alert("Story submitted");
+            })
+        } else {
+            alert("Madlib must contain atleast one fill in the blank.");
+        }
+    } else {
+        alert("You have not entered a story yet.");
+    }
+}
 
 
 //vn: can comment this out
@@ -319,21 +339,21 @@ $("#playButton").click(function() {
     });
 }); //end click play
 
-// =========  Form Validation =========================== 
+// =========  Form Validation ===========================
 function checkInput(inputArray) {
   console.log("inputArray is", inputArray[0]);
   var totalInput = inputArray.length;
   console.log("totalInput is:", totalInput);
   var inputValue = [];
-  for (var i = 0; i <totalInput; i++) {       
+  for (var i = 0; i <totalInput; i++) {
     inputValue[i] = $('#'+ inputArray[i] + ' .form-control').val();
     console.log("inputValue is", inputValue);
     if(inputValue[i] === "") {
-        alert("SOORY, Please fill out the form");          
+        alert("SOORY, Please fill out the form");
         return false;
-     } 
+     }
     //console.log("i="+i+", "+ inputValue[i]);
-  }  
+  }
   return true;
 }
 
@@ -444,4 +464,11 @@ $("#contact").on('click', function() {
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(contact);
+});
+
+//onclick() function for contact
+$("#addstory").on('click', function() {
+    $("div#theJumbotron").empty();
+    $("#input_section").empty();
+    $("div#theJumbotron").append(addstoryscreen);
 });

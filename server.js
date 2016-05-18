@@ -93,6 +93,18 @@ var findStoryByID = function(id, db, callback) {
     });
 };
 
+//Adds a user created story to the database
+var addUserStory = function(db, userStory, callback) {
+    var collection = db.collection('stories');
+
+    collection.insert(
+        {story: userStory},
+        function(err, result) {
+            console.log("Mongo Insertion Error:" + err);
+            callback(result);
+        });
+}
+
 //
 //sockets start//
 //
@@ -237,6 +249,21 @@ io.sockets.on('connection', function(socket) {
 //SOCKETS END
 
 var fixedInt;
+
+//Accept user created story from client
+// and store into mongo database
+app.post("/submitStory", function(req, res) {
+    console.log("User story: " + req.body.userStory);
+    MongoClient.connect(url, function(err, db) {
+
+        addUserStory(db, req.body.userStory, function(result) {
+            console.log("User submission: " + result);
+            db.close();
+        })
+
+    });
+
+})
 
 //Return story and stories id
 app.get("/getStory", function(req, res) {
