@@ -307,6 +307,7 @@ app.post("/submitStory", function(req, res) {
 
 });
 
+//Returns number of stories currently stored in the mongo db
 app.get("/storyCount", function(req, res) {
     MongoClient.connect(url, function(err, db) {
 
