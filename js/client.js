@@ -53,7 +53,7 @@ function startTheGame() {
 
 //show the form host
 socket.on('showform1', function() {
-        
+
         $("div#wordgenerator").empty();
         $("div#wordgenerator").append(wordgen);
 
@@ -125,8 +125,8 @@ socket.on('showform1', function() {
                     var submitButton = document.getElementById("submitButton");
                     submitButton.addEventListener('click', function() {
                         // ========check if no empty input, then build story
-                        if(!checkInput(inputArray)){
-                           return ;
+                        if (!checkInput(inputArray)) {
+                            return;
                         }
                         //build story
                         var story;
@@ -224,8 +224,8 @@ socket.on('showform2', function() {
                     var submitButton = document.getElementById("submitButton");
                     submitButton.addEventListener('click', function() {
                         // ========check if no empty input, then build story
-                        if(!checkInput(inputArray)){
-                            return ;
+                        if (!checkInput(inputArray)) {
+                            return;
                         }
                         //buildStoryFunction(storyID);
                         //build story
@@ -306,7 +306,9 @@ function submitUserStory() {
     if ($("#storyinput").val() != "") {
         if ($("#storyinput").val().indexOf("[[") != -1 && $("#storyinput").val().indexOf("]]") != -1) {
             console.log("Story being submitted: " + $("#storyinput").val());
-            $.post("http://localhost:8000/submitStory", {userStory: $("#storyinput").val()}, function(data, status) {
+            $.post("http://localhost:8000/submitStory", {
+                userStory: $("#storyinput").val()
+            }, function(data, status) {
                 console.log("Data:" + data + "\n Status: " + status);
                 alert("Story submitted");
             })
@@ -347,20 +349,20 @@ $("#playButton").click(function() {
 
 // =========  Form Validation ===========================
 function checkInput(inputArray) {
-  console.log("inputArray is", inputArray[0]);
-  var totalInput = inputArray.length;
-  console.log("totalInput is:", totalInput);
-  var inputValue = [];
-  for (var i = 0; i <totalInput; i++) {
-    inputValue[i] = $('#'+ inputArray[i] + ' .form-control').val();
-    console.log("inputValue is", inputValue);
-    if(inputValue[i] === "") {
-        alert("SOORY, Please fill out the form");
-        return false;
-     }
-    //console.log("i="+i+", "+ inputValue[i]);
-  }
-  return true;
+    console.log("inputArray is", inputArray[0]);
+    var totalInput = inputArray.length;
+    console.log("totalInput is:", totalInput);
+    var inputValue = [];
+    for (var i = 0; i < totalInput; i++) {
+        inputValue[i] = $('#' + inputArray[i] + ' .form-control').val();
+        console.log("inputValue is", inputValue);
+        if (inputValue[i] === "") {
+            alert("SOORY, Please fill out the form");
+            return false;
+        }
+        //console.log("i="+i+", "+ inputValue[i]);
+    }
+    return true;
 }
 
 // ====================================  submit input ============================================
@@ -481,7 +483,7 @@ $("#addstory").on('click', function() {
 });
 
 //Generate a Random Word---------------------------
-socket.on('generateWord', function(){
+socket.on('generateWord', function() {
 
 })
 
@@ -489,8 +491,7 @@ function generateWord() {
     socket.emit('generateWord');
 }
 
-socket.on('wordGenerated', function(data){
+socket.on('wordGenerated', function(data) {
     $("div#wordHolder").empty();
     $("div#wordHolder").append(data.word);
 })
-

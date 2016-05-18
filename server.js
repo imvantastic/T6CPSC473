@@ -100,8 +100,9 @@ var findStoryByID = function(id, db, callback) {
 var addUserStory = function(db, userStory, callback) {
     var collection = db.collection('stories');
 
-    collection.insert(
-        {story: userStory},
+    collection.insert({
+            story: userStory
+        },
         function(err, result) {
             console.log("Mongo Insertion Error:" + err);
             callback(result);
@@ -251,16 +252,18 @@ io.sockets.on('connection', function(socket) {
         }
     })
 
-//Generate a Random Word---------------------------
-//function generateWord() {
-socket.on('generateWord', function(){
-    var rword = randomWord();
-    io.to(socket.id).emit('wordGenerated', {word : rword});
-    //socket.emit('generateWord');
-})
+    //Generate a Random Word---------------------------
+    //function generateWord() {
+    socket.on('generateWord', function() {
+        var rword = randomWord();
+        io.to(socket.id).emit('wordGenerated', {
+            word: rword
+        });
+        //socket.emit('generateWord');
+    })
 
-if(gamestatus == "started"){
-    //create shake event start
+    if (gamestatus == "started") {
+        //create shake event start
         var shakeEvent = new Shake({
             threshold: 15
         });
@@ -273,14 +276,16 @@ if(gamestatus == "started"){
 
         window.addEventListener('shake', (function() {
             var rword = randomWord();
-            io.to(socket.id).emit('wordGenerated', {word : rword});
+            io.to(socket.id).emit('wordGenerated', {
+                word: rword
+            });
         }), false);
 
         if (!('ondevicemotion' in window)) {
             alert('Shaking Not Supported');
         }
         //create shake event end
-}
+    }
 
 });
 //SOCKETS END
@@ -428,4 +433,3 @@ var findInput = function(db, callback) {
         callback(doc);
     });
 };
-
