@@ -5,6 +5,7 @@ var socket = io.connect('http://localhost:8000');
 
 //reset game on disconnect
 socket.on('reset game', function(data) {
+    $("div#wordgenerator").empty();
     $("div#theJumbotron").empty();
     $("#input_section").empty();
     $("div#theJumbotron").append(resethomescreen);
